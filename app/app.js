@@ -10,12 +10,30 @@ const loadCategories =()=>{
     })
 }
 
+
+
+const  removeActiveClass= ()=>{
+    const buttons = document.getElementsByClassName("category-btn")
+    console.log(buttons)
+for(let btn of buttons){
+    btn.classList.remove("active")
+}
+}
+
 const loadVideosByCategory=(id)=>{
 
 alert(`category ${id}`)
  fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
     .then(res=> res.json())
-    .then(data=>displayVideos(data.category))
+
+    .then(data=>{
+        removeActiveClass()
+        const activeBtn = document.getElementById(`btn-${id}`);
+        activeBtn.classList.add("active")
+        
+       
+        displayVideos(data.category)
+    })
     .catch(e=>{
         console.log("Error fetching data",e);
         
@@ -32,7 +50,7 @@ const displayCategory=(categories)=>{
         const buttonContainer = document.createElement("div");
         buttonContainer.innerHTML= 
         `
-        <button onclick="loadVideosByCategory(${item.category_id})" class="btn" > ${item.category} </button>
+        <button id="btn-${item.category_id}" onclick="loadVideosByCategory(${item.category_id})" class="btn category-btn" > ${item.category} </button>
         `
 
         categoryContainer.append(buttonContainer);
@@ -44,9 +62,9 @@ loadCategories()
 
 
 // load videos
-const loadVideos =()=>{
+const loadVideos =(inputText = " ")=>{
     
-    fetch(`https://openapi.programming-hero.com/api/phero-tube/videos`)
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${inputText}`)
     .then(res=> res.json())
     .then(data=> displayVideos(data.videos))
     .catch(e=>{
@@ -62,6 +80,28 @@ function getTimeString(time){
     const minutes = parseInt(remainingSecond / 60);
    
     return `${hour} hrs ${minutes} min ago`
+}
+const loadDetails= async (videoId)=>{
+    const url = (` https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`)
+
+    const res = await fetch(url)
+    const data = await res.json()
+    displayVideoDetails(data.video)
+    
+
+  
+}
+const displayVideoDetails = (video)=>{
+    console.log(video)
+    const detailsContainer =  document.getElementById("modalContent")
+
+    detailsContainer.innerHTML=`
+        <img src=${video.thumbnail} />
+        <p> ${video.description} </p>
+    `
+
+    document.getElementById("customModal").showModal();
+
 }
 
 
@@ -124,11 +164,11 @@ videos.forEach(video=>{
     <p>${video.others.views} views</p>
    
     </div>
-
+    
     
   </div>
 
- 
+ <p> <button onclick="loadDetails('${video.video_id}')" class="btn btn-sm btn-error" >Details</button> </p>
      `
 
 videosContainer.append(card);
@@ -137,4 +177,13 @@ videosContainer.append(card);
     }
 
 }
+const inputText = document.getElementById("search-input").addEventListener("keyup",(e)=>{
+loadVideos(e.target.value)
+})
+
+
+
+
+
+
 

@@ -19,7 +19,7 @@
                 <img class="" src="./assets/Logo.png" alt="">
             </div>
             <div class="search">
-                <label class="input input-bordered flex items-center gap-2">
+                <label id="search-input" class="input input-bordered flex items-center gap-2">
                     <input type="text" class="grow" placeholder="Search" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                         class="h-4 w-4 opacity-70">
@@ -45,6 +45,20 @@
         </section>
 
     </main>
+    <!-- Open the modal using ID.showModal() method -->
+    <button class="btn hidden" onclick="customModal.showModal()">open modal</button>
+    <dialog id="customModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+           <div id="modalContent"> </div>
+           
+            <div class="modal-action">
+                <form method="dialog">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
 
 
 
